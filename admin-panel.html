@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Administrador</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="img/logo-aora.png">
+</head>
+<body>
+  <header>
+    <div class="img"><img src="img/logo-aora.png" alt="10" width="200" ></div>
+    <h1>Panel de Administración</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">INICIO</a></li>
+        <li><a href="index1.html">NOTICIAS</a></li>
+      </ul>
+    </nav>
+
+  </header>
+
+  
+  <div class="container">
+    <h2>Crear Noticia</h2>
+    <form id="formPost">
+      <input type="text" name="title" placeholder="Título" required><br>
+      <div id="editor" style="height: 200px;"></div><br>
+      <input type="file" name="media"><br>
+      <button type="submit">Publicar</button>
+    </form>
+
+    <hr>
+
+    <h2>Noticias Publicadas</h2>
+    <div id="listaNoticias"></div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-column contact-info">
+            <h3>Contacto</h3>
+            <ul>
+                <li><i class="fas fa-phone-alt"></i> <a href="tel:+18494272328">+1 (849) 427-2328</a></li>
+                <li><i class="fas fa-envelope"></i> <a href="mailto:aoraoficial@gmail.com">aoraoficial@gmail.com</a></li>
+                <li><i class="fas fa-map-marker-alt"></i> Santo Domingo Oeste, República Dominicana</li>
+                <li><i class="fas fa-clock"></i> Lunes a viernes de 8:00 a.m. a 5:00 p.m.</li>
+            </ul>
+        </div>
+
+        <div class="footer-column quick-links">
+            <h3>Enlaces Rápidos</h3>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="inscripcion1.html">Formulario de Inscripción</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column social-media">
+            <h3>Síguenos</h3>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/share/1JZSDxdMos/" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/aora.oficial7/"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/aoraoficial" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-logo">
+            <img src="img/logo-aora.png" alt="Logo Rescate Nacional" width="60">
+        </div>
+        <p>&copy; 2026 AORA. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+ <script>
+  const quill = new Quill('#editor', { theme: 'snow' });
+
+  document.getElementById('formPost').onsubmit = async (e) => {
+    e.preventDefault();
+
+    const btnPublicar = e.target.querySelector('button[type="submit"]');
+    btnPublicar.disabled = true; // Deshabilitar botón para evitar envíos múltiples
+
+    const form = new FormData();
+    form.append('title', e.target.title.value);
+    form.append('content', quill.root.innerHTML);
+
+    const file = e.target.media.files[0];
+    if (file) form.append('media', file);
+
+    try {
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        body: form
+      });
+
+      if (res.ok) {
+        alert("Noticia publicada");
+        e.target.reset();
+        quill.root.innerHTML = '';
+        cargarNoticias();
+      } else {
+        alert("Error al publicar");
+      }
+    } catch (error) {
+      alert("Error al publicar noticia");
+      console.error(error);
+    } finally {
+      btnPublicar.disabled = false; // Volver a habilitar botón
+    }
+  };
+
+  async function cargarNoticias() {
+    try {
+      const res = await fetch('/api/posts/all');
+      if (!res.ok) throw new Error('Error al cargar noticias');
+
+      const noticias = await res.json();
+      const contenedor = document.getElementById('listaNoticias');
+      contenedor.innerHTML = '';
+
+      noticias.forEach(n => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <h3>${n.title}</h3>
+          <p>${n.fecha}</p>
+          ${n.media ? `<img src="uploads/${n.media}" width="200">` : ''}
+          <div>${n.content}</div>
+          <button onclick="eliminarNoticia('${n.id}')">Eliminar</button>
+          <hr>
+        `;
+        contenedor.appendChild(div);
+      });
+    } catch (error) {
+      console.error(error);
+      document.getElementById('listaNoticias').innerHTML = '<p>Error al cargar las noticias.</p>';
+    }
+  }
+
+  async function eliminarNoticia(id) {
+    if (confirm("¿Estás seguro de eliminar esta noticia?")) {
+      try {
+        const res = await fetch(`/api/posts/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (res.ok) {
+          alert("Noticia eliminada");
+          cargarNoticias();
+        } else {
+          alert("Error al eliminar");
+        }
+      } catch (error) {
+        alert("Error al eliminar noticia");
+        console.error(error);
+      }
+    }
+  }
+
+  cargarNoticias();
+</script>
+
+</body>
+</html>

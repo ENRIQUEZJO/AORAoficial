@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/x-icon" href="img/logo-aora.png">
+</head>
+<body>
+  <header>
+    <div class="img"><img src="img/logo-aora.png" alt="10" width="200" ></div>
+    <h1>Panel de Administrador</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">INICIO</a></li>
+        <li><a href="index1.html">NOTICIAS</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
+    <form action="/login" method="POST">
+      <input type="text" name="username" placeholder="Usuario" required><br>
+      <input type="password" name="password" placeholder="Contraseña" required><br>
+      <button type="submit">Entrar</button>
+    </form>
+    <!-- Aquí puedes mostrar mensajes si el backend los devuelve -->
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-column contact-info">
+            <h3>Contacto</h3>
+            <ul>
+                <li><i class="fas fa-phone-alt"></i> <a href="tel:+18494272328">+1 (849) 427-2328</a></li>
+                <li><i class="fas fa-envelope"></i> <a href="mailto:aoraoficial@gmail.com">aoraoficial@gmail.com</a></li>
+                <li><i class="fas fa-map-marker-alt"></i> Santo Domingo Oeste, República Dominicana</li>
+                <li><i class="fas fa-clock"></i> Lunes a viernes de 8:00 a.m. a 5:00 p.m.</li>
+            </ul>
+        </div>
+
+        <div class="footer-column quick-links">
+            <h3>Enlaces Rápidos</h3>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="inscripcion1.html">Formulario de Inscripción</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column social-media">
+            <h3>Síguenos</h3>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/profile.php?id=61574131103106" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/aora.oficial7/"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/aoraoficial" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-logo">
+            <img src="img/logo-aora.png" alt="Logo Rescate Nacional" width="60">
+        </div>
+        <p>&copy; 2026 AORA. Todos los derechos reservados.</p>
+    </div>
+</footer>
+</body>
+</html>

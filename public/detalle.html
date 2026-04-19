@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Noticia</title>
+    <link rel="stylesheet" href="styles.css">
+     <!-- Google Fonts -->
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <img src="img/logo-aora.png" alt="Logo AORA">
+      <span class="logo-text">AORA</span>
+    </div>
+    <ul class="nav-menu">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="elpresidente.html">El Presidente</a></li>
+      <li><a href="nosotros.html">El Partido</a></li>
+      <li><a href="direccion.html">Dirección</a></li>
+      <li class="active"><a href="index1.html">Noticias</a></li>
+      <li><a href="multimedia.html">Multimedia</a></li>
+      <li><a href="inscripcion1.html">Únete</a></li>
+      <li><a href="login.html">Inicio Sesion</a></li>
+    </ul>
+  </div>
+</nav>
+
+    <div class="container" style="margin-top: 100px; padding: 20px; max-width: 800px;">
+        <div id="detalle-noticia">
+            <p>Cargando noticia...</p>
+        </div>
+        <br>
+        <a href="index1.html" class="btn-blue-hero">Volver a noticias</a>
+    </div>
+
+    <section class="noticias-section" id="noticias">
+  <div class="noticias-header">
+    <h2>Noticias</h2>
+    <div class="filters">
+      <button class="filter-btn active">Todas</button>
+      <button class="filter-btn">Eventos</button>
+      <button class="filter-btn">Comunicados</button>
+    </div>
+  </div>
+
+  <div class="search-box">
+    <input type="text" placeholder="Buscar noticia...">
+    <button><i class="fas fa-search"></i></button>
+  </div>
+
+  <div class="noticias-grid" id="noticias-grid">
+      </div>
+</section>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-column contact-info">
+            <h3>Contacto</h3>
+            <ul>
+                <li><i class="fas fa-phone-alt"></i> <a href="tel:+18494272328">+1 (849) 427-2328</a></li>
+                <li><i class="fas fa-envelope"></i> <a href="mailto:aoraoficial@gmail.com">aoraoficial@gmail.com</a></li>
+                <li><i class="fas fa-map-marker-alt"></i> Santo Domingo Oeste, República Dominicana</li>
+                <li><i class="fas fa-clock"></i> Lunes a viernes de 8:00 a.m. a 5:00 p.m.</li>
+            </ul>
+        </div>
+
+        <div class="footer-column quick-links">
+            <h3>Enlaces Rápidos</h3>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="inscripcion1.html">Formulario de Inscripción</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column social-media">
+            <h3>Síguenos</h3>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/profile.php?id=61574131103106" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/aora.oficial7/"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/aoraoficial" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-logo">
+            <img src="img/logo-aora.png" alt="Logo Rescate Nacional" width="60">
+        </div>
+        <p>&copy; 2026 AORA. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<script src="script.js"></script> 
+</body>
+
+<script>
+    async function cargarDetalle() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        const contenedor = document.getElementById('detalle-noticia');
+
+        try {
+            // Buscamos todas las noticias y filtramos la que necesitamos
+            const res = await fetch('/api/posts/all');
+            const noticias = await res.json();
+            const noticia = noticias.find(n => n.id === id);
+
+            if (noticia) {
+                contenedor.innerHTML = `
+                    <h1 style="color: #003366;">${noticia.title}</h1>
+                    <p style="color: #666; margin-bottom: 20px;">${noticia.fecha}</p>
+                    ${noticia.media ? `<img src="/uploads/${noticia.media}" style="width:100%; border-radius:10px;">` : ''}
+                    <div style="margin-top: 20px; font-size: 1.1rem; line-height: 1.6;">
+                        ${noticia.content}
+                    </div>
+                `;
+            } else {
+                contenedor.innerHTML = "<h2>Noticia no encontrada</h2>";
+            }
+        } catch (e) {
+            contenedor.innerHTML = "<p>Error al cargar la noticia.</p>";
+        }
+    }
+    window.onload = cargarDetalle;
+</script>
+</body>
+</html>

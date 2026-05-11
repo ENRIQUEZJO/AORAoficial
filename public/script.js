@@ -40,11 +40,13 @@ function renderizarNoticias(noticias) {
     grid.innerHTML = ''; // Limpiamos el contenedor
 
     noticias.forEach(post => {
-        // --- SOLUCIÓN DE IMAGEN DE PORTADA ---
-        // Si no hay media en la DB, usamos noticias.jpg que está en la carpeta img
-        const imagenUrl = post.media ? post.media : 'img/noticias.jpg';
+        // --- SOLUCIÓN CORREGIDA ---
+        // 1. Si post.media existe, le ponemos el prefijo /uploads/
+        // 2. Si no existe, usamos la imagen por defecto
+        const imagenUrl = post.media 
+            ? `/uploads/${post.media}` 
+            : 'img/noticias.jpg';
         
-        // Limpiamos el HTML del contenido para el resumen
         const textoPlano = post.content ? post.content.replace(/<[^>]*>?/gm, '') : '';
         const resumen = textoPlano.substring(0, 100) + '...';
 
@@ -76,7 +78,6 @@ function renderizarNoticias(noticias) {
         grid.appendChild(card);
     });
 }
-
 // 4. FUNCIÓN DEL BUSCADOR
 function buscarNoticia() {
     const filtroInput = document.getElementById('searchInput');
